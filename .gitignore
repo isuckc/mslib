@@ -1,3 +1,6 @@
 main
 test
 build/
+.idea/
+compile_commands.json
+.cache/
