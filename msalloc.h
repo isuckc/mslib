@@ -2,12 +2,12 @@
 #define msalloc_h
 
 #include <stddef.h>
+#include <stdlib.h>
 
 typedef struct {
-  void *ctx;
   void *(*alloc)(void *ctx, size_t size);
-  void *(*free)(void *ctx, void *ptr);
-} Allocator;
+  void (*free)(void *ctx, void *alloc);
+} AllocatorVTable;
 
 #endif // msalloc_h
 
@@ -21,11 +21,21 @@ extern "C" {
 typedef struct {
   size_t cap;
   size_t len;
-  size_t offset;
-  void **bytes;
+  void *bytes;
+  AllocatorVTable vtable;
 } ArenaAllocator;
 
-void *arena_alloc(size_t *capacity) {}
+void *arena_alloc(size_t size) {}
+
+void arena_free(ArenaAllocator *alloc) {}
+
+ArenaAllocator create_arena(size_t capacity) {
+  return (ArenaAllocator){
+      .len = 0,
+      .cap = capacity,
+      .bytes = malloc(capacity),
+      .vtable = (AllocatorVTable){.alloc = arena_alloc, .free = arena_free}};
+}
 
 // Stack Allocator
 

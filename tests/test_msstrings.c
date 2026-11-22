@@ -1,4 +1,4 @@
-#include "msstrings.h"
+#include "../msstrings.h"
 #include "test.h"
 
 static void test_creation_and_len(void) {
