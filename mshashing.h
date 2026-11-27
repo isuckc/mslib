@@ -2,12 +2,14 @@
 #define MSHASHING_H
 
 /*
- * mshashing.h - Minimal, fast, non-cryptographic hashing library in C.
+ * Author: strommach
+ * mshashing.h - Minimal, fast, non-cryptographic hashing library in C99.
  *
  * Designed for hash tables, bloom filters, checksums, and general data
  * structures where speed and distribution matter (NOT cryptographic security).
  *
  * Just #include "mshashing.h" in any C99+ or C++11+ source file.
+ * Passing data == NULL is treated safely as an empty slice (len == 0).
  *
  * Algorithms provided:
  *   - FNV-1a   (32-bit & 64-bit) : tiny, classic, great for short keys

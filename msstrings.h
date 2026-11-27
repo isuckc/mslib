@@ -1,10 +1,27 @@
 /*
- * Author: neurd
+ * Author: strommach
  * Date: 20th November 2026
- * msstrings.h - v0.0.2: A single header library for manipulating easily your
- * strings!
+ * msstrings.h - v0.0.2: A single-header C99 dynamic string library using
+ * stretchy buffers (NUL-terminated `char *` with a hidden length/cap header).
  *
- * This implementation uses stretchy buffers
+ * Usage:
+ *   Just #include "msstrings.h" in any C99 (or C++) translation unit.
+ *   Because mutating operations (copy, concat, push) may reallocate, always
+ *   assign their return value back to your string variable:
+ *
+ *     char *s = msstr_new("hello");
+ *     s = msstr_concat_cstr(s, " world");
+ *     printf("%s (len=%zu)\n", s, msstr_len(s));
+ *     msstr_free(s);
+ *
+ * API:
+ *   Inspection : msstr_len, msstr_cap, msstr_empty
+ *   Lifecycle  : msstr_with_cap, msstr_from_len, msstr_new, msstr_dup,
+ *                msstr_clear, msstr_destroy, msstr_free
+ *   Mutation   : msstr_copy, msstr_copy_len, msstr_copy_cstr,
+ *                msstr_concat, msstr_concat_len, msstr_concat_cstr, msstr_push
+ *   Comparison : msstr_cmp, msstr_eq, msstr_eq_cstr
+ *   Transforms : msstr_substr, msstr_trim, msstr_split
  */
 
 #ifndef MSSTRINGS_H

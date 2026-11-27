@@ -1,5 +1,5 @@
 /*
- * Author: neurd
+ * Author: strommach
  * Date: 26th November 2026
  * msfs.h - v0.0.1: A lightweight, portable single-header C99 library for
  * file handling and I/O operations.
@@ -7,6 +7,24 @@
  * Usage:
  *   Just #include "msfs.h" in any C99 (or C++) translation unit.
  *   No separate compilation or implementation macro is required.
+ *
+ * Example:
+ *   msfs_write_text("hello.txt", "line 1\nline 2\n");
+ *   msfs_file_t f = MSFS_FILE_INIT;
+ *   if (msfs_open(&f, "hello.txt", MSFS_MODE_READ) == MSFS_OK) {
+ *     char buf[128];
+ *     while (msfs_read_line(&f, buf, sizeof(buf), NULL) == MSFS_OK) {
+ *       puts(buf);
+ *     }
+ *     msfs_close(&f);
+ *   }
+ *
+ * Notes:
+ *   - Built purely on ISO C99 standard library headers for maximum portability.
+ *   - Files are always opened in binary mode so byte counts and seeks behave
+ *     consistently across Unix and Windows.
+ *   - msfs_read_text() and msfs_read_bytes() return heap-allocated buffers
+ *     that the caller must release with free().
  *
  * Overview:
  *   1. Whole-file helpers:
@@ -111,6 +129,9 @@ typedef struct {
   FILE *fp;
   msfs_mode_t mode;
 } msfs_file_t;
+
+/* Default initializer for a closed msfs_file_t handle. */
+#define MSFS_FILE_INIT {NULL, MSFS_MODE_READ}
 
 /* Error description */
 

@@ -1,8 +1,25 @@
 /*
- * Author: neurd
+ * Author: strommach
  * Date: 22nd November 2026
- * msdates.h - v0.0.1: A single header C99 library for managing dates in
- * compact formats.
+ * msdates.h - v0.0.1: A single-header C99 library for managing Gregorian dates
+ * in compact formats.
+ *
+ * Usage:
+ *   Just #include "msdates.h" in any C99 (or C++) translation unit.
+ *   Valid dates span 0001-01-01 through 9999-12-31; invalid dates are
+ *   represented by MSDATE_INVALID (0).
+ *
+ * API:
+ *   Calendar helpers : msdate_is_leap_year, msdate_days_in_month,
+ *                      msdate_days_in_year
+ *   Construction     : msdate_make, msdate_today, msdate_is_valid,
+ *                      msdate_year, msdate_month, msdate_day
+ *   Conversions      : msdate_to_days, msdate_from_days,
+ *                      msdate_to_int, msdate_from_int,
+ *                      msdate_to_str, msdate_to_compact_str, msdate_from_str
+ *   Queries & math   : msdate_weekday, msdate_day_of_year,
+ *                      msdate_add_days, msdate_add_months, msdate_add_years,
+ *                      msdate_diff_days, msdate_cmp
  */
 
 #ifndef MSDATES_H
@@ -47,8 +64,8 @@ typedef uint32_t msdate_t;
 #define MSDATE_MAX_DAYS ((int32_t)2932896)
 
 /* Minimum buffer sizes (including NUL terminator) for string formatting */
-#define MSDATE_STR_SIZE 11         /* "YYYY-MM-DD\0" */
-#define MSDATE_COMPACT_STR_SIZE 9  /* "YYYYMMDD\0" */
+#define MSDATE_STR_SIZE 11        /* "YYYY-MM-DD\0" */
+#define MSDATE_COMPACT_STR_SIZE 9 /* "YYYYMMDD\0" */
 
 enum {
   MSDATE_SUN = 0,
@@ -92,8 +109,7 @@ MSD_INLINE int msdate_is_leap_year(int year) {
 }
 
 MSD_INLINE int msdate_days_in_month(int year, int month) {
-  static const int days[12] = {31, 28, 31, 30, 31, 30,
-                               31, 31, 30, 31, 30, 31};
+  static const int days[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
   if (year < MSDATE_MIN_YEAR || year > MSDATE_MAX_YEAR || month < 1 ||
       month > 12) {
     return 0;
@@ -309,8 +325,8 @@ MSD_INLINE msdate_t msdate_add_months(msdate_t d, int32_t months) {
   if (!msdate_is_valid(d)) {
     return MSDATE_INVALID;
   }
-  int64_t total = (int64_t)msdate_year(d) * 12 + (int64_t)(msdate_month(d) - 1) +
-                  (int64_t)months;
+  int64_t total = (int64_t)msdate_year(d) * 12 +
+                  (int64_t)(msdate_month(d) - 1) + (int64_t)months;
   if (total < (int64_t)MSDATE_MIN_YEAR * 12 ||
       total > (int64_t)MSDATE_MAX_YEAR * 12 + 11) {
     return MSDATE_INVALID;
